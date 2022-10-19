@@ -1,8 +1,9 @@
 package com.example.beers.entities
 
+import com.example.beers.ui.ListItemViewModel
 import com.squareup.moshi.Json
 
-data class Beer(
+data class DTOBeer (
     @Json(name = "id") val id: String,
     @Json(name = "name") val name: String,
     @Json(name = "tagline") val tagline: String,

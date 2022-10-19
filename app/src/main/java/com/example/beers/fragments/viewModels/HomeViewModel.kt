@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.beers.BeerServices
 import com.example.beers.BeersApi
-import com.example.beers.BeersApi.retrofitService
-import com.example.beers.entities.Beer
+import com.example.beers.entities.DSBeer
+import com.example.beers.entities.DTOBeer
 import kotlinx.coroutines.launch
 
 enum class BeerPhotoStatus { LOADING, ERROR, DONE }
@@ -22,21 +21,24 @@ class HomeViewModel : ViewModel() {
 
     // Internally, we use a MutableLiveData, because we will be updating the List of MarsPhoto
     // with new values
-    private val _beers = MutableLiveData<List<Beer>>()
+    private var _beers = MutableLiveData<List<DSBeer>>()
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val beers: LiveData<List<Beer>> = _beers
+    val beers: MutableLiveData<List<DSBeer>> = _beers
 
-    fun getBeers() {
+    fun requestBeers() : MutableLiveData<List<DSBeer>>{
         viewModelScope.launch {
             _status.value = BeerPhotoStatus.LOADING
             try {
-                _beers.value = BeersApi.retrofitService.getBeers()
+                _beers.value = BeersApi.retrofitService.getBeers().map { dto -> DSBeer(dto.id, dto.name, dto.tagline, dto.firstBrewed, dto.description, dto.imageUrl)
+                }
                 _status.value = BeerPhotoStatus.DONE
             } catch (e: Exception) {
                 _status.value = BeerPhotoStatus.ERROR
                 _beers.value = listOf()
             }
         }
+
+        return beers
     }
 }

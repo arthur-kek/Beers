@@ -1,6 +1,6 @@
 package com.example.beers
 
-import com.example.beers.entities.Beer
+import com.example.beers.entities.DTOBeer
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -21,7 +21,7 @@ private val retrofit = Retrofit.Builder()
 interface BeerServices {
 
     @GET("beers")
-    suspend fun getBeers(): List<Beer>
+    suspend fun getBeers(): List<DTOBeer>
 
 }
 

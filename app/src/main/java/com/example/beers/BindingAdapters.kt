@@ -1,12 +1,13 @@
 package com.example.beers
 
 import android.widget.ImageView
-import android.widget.ListAdapter
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.beers.entities.Beer
+import com.example.beers.entities.DSBeer
+import com.example.beers.entities.DTOBeer
+import com.example.beers.ui.GenericAdapter
 
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String?) {
@@ -18,3 +19,13 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
         }
     }
 }
+
+@BindingAdapter("items")
+fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<DSBeer>, ) {
+    val adapter = GenericAdapter<DSBeer>(R.layout.item_beer)
+    recyclerView.adapter = adapter
+    adapter.addItems(data)
+}
+
+
+
