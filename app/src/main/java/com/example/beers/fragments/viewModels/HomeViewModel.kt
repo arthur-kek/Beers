@@ -8,6 +8,7 @@ import com.example.beers.BeersApi
 import com.example.beers.entities.DSBeer
 import com.example.beers.entities.DTOBeer
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 enum class BeerPhotoStatus { LOADING, ERROR, DONE }
 
@@ -21,16 +22,24 @@ class HomeViewModel : ViewModel() {
 
     // Internally, we use a MutableLiveData, because we will be updating the List of MarsPhoto
     // with new values
-    private var _beers = MutableLiveData<List<DSBeer>>()
+    private var _beers = MutableLiveData<List<DSBeer?>>()
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val beers: MutableLiveData<List<DSBeer>> = _beers
+    val beers: MutableLiveData<List<DSBeer?>> = _beers
 
-    fun requestBeers() : MutableLiveData<List<DSBeer>>{
-        viewModelScope.launch {
+    fun requestBeers(): List<DSBeer?>? {
+        runBlocking {
             _status.value = BeerPhotoStatus.LOADING
             try {
-                _beers.value = BeersApi.retrofitService.getBeers().map { dto -> DSBeer(dto.id, dto.name, dto.tagline, dto.firstBrewed, dto.description, dto.imageUrl)
+                _beers.value = BeersApi.retrofitService.getBeers().map { dto ->
+                    DSBeer(
+                        dto.id,
+                        dto.name,
+                        dto.tagline,
+                        dto.firstBrewed,
+                        dto.description,
+                        dto.imageUrl
+                    )
                 }
                 _status.value = BeerPhotoStatus.DONE
             } catch (e: Exception) {
@@ -39,6 +48,6 @@ class HomeViewModel : ViewModel() {
             }
         }
 
-        return beers
+        return beers.value
     }
 }

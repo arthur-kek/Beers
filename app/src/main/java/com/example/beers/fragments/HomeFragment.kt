@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = FragmentHomeBinding.inflate(inflater)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         return binding.root
 
