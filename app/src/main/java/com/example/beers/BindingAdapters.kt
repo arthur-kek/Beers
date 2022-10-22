@@ -21,10 +21,11 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
 }
 
 @BindingAdapter("items")
-fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<DSBeer>, ) {
+fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<DSBeer>) {
     val adapter = GenericAdapter<DSBeer>(R.layout.item_beer)
     recyclerView.adapter = adapter
     adapter.addItems(data)
+
 }
 
 

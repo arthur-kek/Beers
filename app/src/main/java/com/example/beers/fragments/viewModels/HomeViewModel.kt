@@ -22,13 +22,17 @@ class HomeViewModel : ViewModel() {
 
     // Internally, we use a MutableLiveData, because we will be updating the List of MarsPhoto
     // with new values
-    private var _beers = MutableLiveData<List<DSBeer?>>()
+    private var _beers = MutableLiveData<List<DSBeer?>>(emptyList())
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val beers: MutableLiveData<List<DSBeer?>> = _beers
+    val beers: LiveData<List<DSBeer?>> = _beers
 
-    fun requestBeers(): List<DSBeer?>? {
-        runBlocking {
+    init {
+        loadBeers()
+    }
+
+    private fun loadBeers() {
+        viewModelScope.launch {
             _status.value = BeerPhotoStatus.LOADING
             try {
                 _beers.value = BeersApi.retrofitService.getBeers().map { dto ->
@@ -47,7 +51,5 @@ class HomeViewModel : ViewModel() {
                 _beers.value = listOf()
             }
         }
-
-        return beers.value
     }
 }
